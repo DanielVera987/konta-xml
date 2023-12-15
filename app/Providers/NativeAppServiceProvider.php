@@ -13,10 +13,6 @@ class NativeAppServiceProvider implements ProvidesPhpIni
      */
     public function boot(): void
     {
-        Window::open()
-            ->route('filament.dashboard.auth.login')
-            ->width(1200)
-            ->height(900);
     }
 
     /**
