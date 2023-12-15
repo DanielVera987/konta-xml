@@ -14,10 +14,10 @@
         <th>Uso de CFDI</th>
         <th>Subtotal</th>
         <th>Descuento</th>
-        <th>Total IEPS</th>
-        <th>IVA 16%</th>
+        <th>Retenido IEPS</th>
         <th>Retenido IVA</th>
         <th>Retenido ISR</th>
+        <th>Traslado IVA 16%</th>
         <th>Total Impuestos Trasladados</th>
         <th>Total Impuestos Retenidos</th>
         {{-- <th>ISH</th> --}}
@@ -40,8 +40,66 @@
             $tfd = $complemento->searchNode('cfdi:Complemento', 'tfd:TimbreFiscalDigital');
             $stringConceptos = '';
 
+            $totalTrasladados = $impuestos['TotalImpuestosTrasladados'];
+            if (empty($impuestos['TotalImpuestosTrasladados'])) {
+                $IVA_Traslado_16 = 0;
+            } else {
+                $IVA_Traslado_16 = $impuestos['TotalTrasladosImpuestoIVA16'] ?? '';
+            }
+
+            $totalRetenidos = $impuestos['TotalImpuestosRetenidos'];
+            if (empty($impuestos['TotalImpuestosRetenidos'])) {
+                $IVA_Retenido = 0;
+                $ISR_Retenido = 0;
+                $IEPS_Retenido = 0;
+            } else {
+                $IVA_Retenido = $impuestos['TotalRetencionesIVA'];
+                $ISR_Retenido = $impuestos['TotalRetencionesISR'];
+                $IEPS_Retenido = $impuestos['TotalRetencionesIEPS'];
+            }
+
             foreach($conceptos as $concepto) {
                 $stringConceptos .= $concepto['Descripcion'] . ' * ';
+
+                if (empty($impuestos['TotalImpuestosTrasladados'])) {
+                    // Suma de impuestos trasladados
+                    $nodeImpuestos = $concepto->searchNode('cfdi:Impuestos');
+                    foreach ($nodeImpuestos as $nodeTrasladados) {
+                        if ($nodeTrasladados->searchNodes('cfdi:Traslado')) {
+                            foreach($nodeTrasladados->searchNodes('cfdi:Traslado') as $nodeTraslado) {
+                                $totalTrasladados += $nodeTraslado['Importe'];
+
+                                if (strpos($nodeTraslado['TasaOCuota'], '0.16') !== false) {
+                                    $IVA_Traslado_16 += $nodeTraslado['Importe'];
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (empty($impuestos['TotalImpuestosRetenidos'])) {
+                    // Suma de impuestos retenidos
+                    $nodeImpuestos = $concepto->searchNode('cfdi:Impuestos');
+                    foreach ($nodeImpuestos as $nodeRetenidos) {
+                        if ($nodeRetenidos->searchNodes('cfdi:Retencion')) {
+                            foreach($nodeRetenidos->searchNodes('cfdi:Retencion') as $nodeRetenido) {
+                                $totalRetenidos += $nodeRetenido['Importe'];
+
+                                if ($nodeRetenido['Impuesto'] == '001') {
+                                    $ISR_Retenido += $nodeRetenido['Importe'];
+                                }
+
+                                if ($nodeRetenido['Impuesto'] == '002') {
+                                    $IVA_Retenido += $nodeRetenido['Importe'];
+                                }
+
+                                if ($nodeRetenido['Impuesto'] == '003') {
+                                    $IEPS_Retenido += $nodeRetenido['Importe'];
+                                }
+                            }
+                        }
+                    }
+                }
             }
 
             $tipoDeComprobante = $cfdi->getNode()['TipoDeComprobante'];
@@ -75,12 +133,12 @@
             <th>{{ $receptor['UsoCFDI'] }}</th>
             <td>{{ $cfdi->getNode()['SubTotal'] }}</td>
             <td>{{ $cfdi->getNode()['Descuento'] }}</td>
-            <td>{{ $impuestos['TotalRetencionesIEPS'] ?? '' }}</td>
-            <td>{{ $impuestos['TotalTrasladosImpuestoIVA16'] ?? '' }}</td>
-            <th>{{ $impuestos['TotalRetencionesIVA'] ?? '' }}</th>
-            <th>{{ $impuestos['TotalRetencionesISR'] ?? '' }}</th>
-            <th>{{ $impuestos['TotalImpuestosTrasladados'] ?? '' }}</th>
-            <th>{{ $impuesots['TotalImpuestosRetenidos'] ?? '' }}</th>
+            <td>{{ $IEPS_Retenido ?? '' }}</td>
+            <th>{{ $IVA_Retenido ?? '' }}</th>
+            <th>{{ $ISR_Retenido ?? '' }}</th>
+            <td>{{ $IVA_Traslado_16 ?? '' }}</td>
+            <th>{{ $totalTrasladados ?? '' }}</th>
+            <th>{{ $totalRetenidos ?? '' }}</th>
             {{-- <th>ISH</th> --}}
             <td>{{ $cfdi->getNode()['Total'] }}</td>
             <td>{{ $cfdi->getNode()['Moneda'] }}</td>
