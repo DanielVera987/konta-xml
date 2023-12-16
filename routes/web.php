@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Storage;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('filament.dashboard.auth.login');
 });
 
 Route::get('/download', function() {
