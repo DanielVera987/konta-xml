@@ -40,13 +40,13 @@
             $tfd = $complemento->searchNode('cfdi:Complemento', 'tfd:TimbreFiscalDigital');
             $stringConceptos = '';
 
-            $totalTrasladados = $impuestos['TotalImpuestosTrasladados'] ?? null;
-            $IVA_Traslado_16 = $impuestos['TotalTrasladosImpuestoIVA16'] ?? null;
+            $totalTrasladados = $impuestos['TotalImpuestosTrasladados'] ?? 0;
+            $IVA_Traslado_16 = $impuestos['TotalTrasladosImpuestoIVA16'] ?? 0;
 
-            $totalRetenidos = $impuestos['TotalImpuestosRetenidos'] ?? null;
-            $IVA_Retenido = $impuestos['TotalRetencionesIVA'] ?? null;
-            $ISR_Retenido = $impuestos['TotalRetencionesISR'] ?? null;
-            $IEPS_Retenido = $impuestos['TotalRetencionesIEPS'] ?? null;
+            $totalRetenidos = $impuestos['TotalImpuestosRetenidos'] ?? 0;
+            $IVA_Retenido = $impuestos['TotalRetencionesIVA'] ?? 0;
+            $ISR_Retenido = $impuestos['TotalRetencionesISR'] ?? 0;
+            $IEPS_Retenido = $impuestos['TotalRetencionesIEPS'] ?? 0;
 
             foreach($conceptos as $concepto) {
                 $stringConceptos .= $concepto['Descripcion'] . ' * ';
