@@ -41,7 +41,7 @@
             $stringConceptos = '';
 
             $totalTrasladados = $impuestos['TotalImpuestosTrasladados'] ?? null;
-            $IVA_Traslado_16 = $impuestos['TotalTrasladosImpuestoIVA16'] ?? nul;
+            $IVA_Traslado_16 = $impuestos['TotalTrasladosImpuestoIVA16'] ?? null;
 
             $totalRetenidos = $impuestos['TotalImpuestosRetenidos'] ?? null;
             $IVA_Retenido = $impuestos['TotalRetencionesIVA'] ?? null;
