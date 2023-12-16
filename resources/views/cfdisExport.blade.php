@@ -40,62 +40,53 @@
             $tfd = $complemento->searchNode('cfdi:Complemento', 'tfd:TimbreFiscalDigital');
             $stringConceptos = '';
 
-            $totalTrasladados = $impuestos['TotalImpuestosTrasladados'];
-            if (empty($impuestos['TotalImpuestosTrasladados'])) {
-                $IVA_Traslado_16 = 0;
-            } else {
-                $IVA_Traslado_16 = $impuestos['TotalTrasladosImpuestoIVA16'] ?? '';
-            }
+            $totalTrasladados = $impuestos['TotalImpuestosTrasladados'] ?? null;
+            $IVA_Traslado_16 = $impuestos['TotalTrasladosImpuestoIVA16'] ?? nul;
 
-            $totalRetenidos = $impuestos['TotalImpuestosRetenidos'];
-            if (empty($impuestos['TotalImpuestosRetenidos'])) {
-                $IVA_Retenido = 0;
-                $ISR_Retenido = 0;
-                $IEPS_Retenido = 0;
-            } else {
-                $IVA_Retenido = $impuestos['TotalRetencionesIVA'];
-                $ISR_Retenido = $impuestos['TotalRetencionesISR'];
-                $IEPS_Retenido = $impuestos['TotalRetencionesIEPS'];
-            }
+            $totalRetenidos = $impuestos['TotalImpuestosRetenidos'] ?? null;
+            $IVA_Retenido = $impuestos['TotalRetencionesIVA'] ?? null;
+            $ISR_Retenido = $impuestos['TotalRetencionesISR'] ?? null;
+            $IEPS_Retenido = $impuestos['TotalRetencionesIEPS'] ?? null;
 
             foreach($conceptos as $concepto) {
                 $stringConceptos .= $concepto['Descripcion'] . ' * ';
 
-                if (empty($impuestos['TotalImpuestosTrasladados'])) {
-                    // Suma de impuestos trasladados
-                    $nodeImpuestos = $concepto->searchNode('cfdi:Impuestos');
-                    foreach ($nodeImpuestos as $nodeTrasladados) {
-                        if ($nodeTrasladados->searchNodes('cfdi:Traslado')) {
-                            foreach($nodeTrasladados->searchNodes('cfdi:Traslado') as $nodeTraslado) {
+                // Suma de impuestos trasladados
+                $nodeImpuestos = $concepto->searchNode('cfdi:Impuestos');
+                foreach ($nodeImpuestos as $nodeTrasladados) {
+                    if ($nodeTrasladados->searchNodes('cfdi:Traslado')) {
+                        foreach($nodeTrasladados->searchNodes('cfdi:Traslado') as $nodeTraslado) {
+                            if (empty($impuestos['TotalImpuestosTrasladados'])) {
                                 $totalTrasladados += $nodeTraslado['Importe'];
-
-                                if (strpos($nodeTraslado['TasaOCuota'], '0.16') !== false) {
-                                    $IVA_Traslado_16 += $nodeTraslado['Importe'];
-                                }
+                            }
+                            
+                            if (empty($impuestos['TotalTrasladosImpuestoIVA16']) && strpos($nodeTraslado['TasaOCuota'], '0.16') !== false) {
+                                $IVA_Traslado_16 += $nodeTraslado['Importe'];
                             }
                         }
                     }
                 }
 
-                if (empty($impuestos['TotalImpuestosRetenidos'])) {
-                    // Suma de impuestos retenidos
-                    $nodeImpuestos = $concepto->searchNode('cfdi:Impuestos');
-                    foreach ($nodeImpuestos as $nodeRetenidos) {
-                        if ($nodeRetenidos->searchNodes('cfdi:Retencion')) {
-                            foreach($nodeRetenidos->searchNodes('cfdi:Retencion') as $nodeRetenido) {
+                
+                // Suma de impuestos retenidos
+                $nodeImpuestos = $concepto->searchNode('cfdi:Impuestos');
+                foreach ($nodeImpuestos as $nodeRetenidos) {
+                    if ($nodeRetenidos->searchNodes('cfdi:Retencion')) {
+                        foreach($nodeRetenidos->searchNodes('cfdi:Retencion') as $nodeRetenido) {
+                            if (empty($impuestos['TotalImpuestosRetenidos'])) {
                                 $totalRetenidos += $nodeRetenido['Importe'];
+                            }
 
-                                if ($nodeRetenido['Impuesto'] == '001') {
-                                    $ISR_Retenido += $nodeRetenido['Importe'];
-                                }
+                            if (empty($impuestos['TotalRetencionesISR']) && $nodeRetenido['Impuesto'] == '001') {
+                                $ISR_Retenido += $nodeRetenido['Importe'];
+                            }
 
-                                if ($nodeRetenido['Impuesto'] == '002') {
-                                    $IVA_Retenido += $nodeRetenido['Importe'];
-                                }
+                            if (empty($impuestos['TotalRetencionesIVA']) && $nodeRetenido['Impuesto'] == '002') {
+                                $IVA_Retenido += $nodeRetenido['Importe'];
+                            }
 
-                                if ($nodeRetenido['Impuesto'] == '003') {
-                                    $IEPS_Retenido += $nodeRetenido['Importe'];
-                                }
+                            if (empty($impuestos['TotalRetencionesIEPS']) && $nodeRetenido['Impuesto'] == '003') {
+                                $IEPS_Retenido += $nodeRetenido['Importe'];
                             }
                         }
                     }
