@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 
@@ -21,8 +22,10 @@ Route::get('/', function () {
 
 Route::get('/download', function() {
     $path = storage_path().'/'.'app/cfdis.xlsx';
+    $dir = storage_path() . '/' . 'app/livewire-tmp';
+
     if (file_exists($path)) {
-        \File::deleteDirectory($path);
+        File::deleteDirectory($dir);
 
         return response()->download($path);
     } else {

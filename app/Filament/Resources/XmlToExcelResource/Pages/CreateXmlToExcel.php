@@ -5,6 +5,7 @@ namespace App\Filament\Resources\XmlToExcelResource\Pages;
 use Filament\Actions;
 use App\Exports\CfdisExport;
 use Filament\Actions\Action;
+use Illuminate\Support\Facades\File;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Database\Eloquent\Model;
 use Filament\Resources\Pages\CreateRecord;
@@ -47,9 +48,11 @@ class CreateXmlToExcel extends CreateRecord
     public function ExportExcel(array $data)
     {
         $path = storage_path().'/'.'app/cfdis.xlsx';
+
         if (file_exists($path)) {
-            \File::delete($path);
+            File::delete($path);
         }
+
         if (!empty($data['attachments'])) {
             $cfdis = collect();
 

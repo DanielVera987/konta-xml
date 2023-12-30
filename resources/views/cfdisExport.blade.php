@@ -53,40 +53,43 @@
 
                 // Suma de impuestos trasladados
                 $nodeImpuestos = $concepto->searchNode('cfdi:Impuestos');
-                foreach ($nodeImpuestos as $nodeTrasladados) {
-                    if ($nodeTrasladados->searchNodes('cfdi:Traslado')) {
-                        foreach($nodeTrasladados->searchNodes('cfdi:Traslado') as $nodeTraslado) {
-                            if (empty($impuestos['TotalImpuestosTrasladados'])) {
-                                $totalTrasladados += $nodeTraslado['Importe'];
-                            }
-                            
-                            if (empty($impuestos['TotalTrasladosImpuestoIVA16']) && strpos($nodeTraslado['TasaOCuota'], '0.16') !== false) {
-                                $IVA_Traslado_16 += $nodeTraslado['Importe'];
+                if ($nodeImpuestos) {
+                    foreach ($nodeImpuestos as $nodeTrasladados) {
+                        if ($nodeTrasladados->searchNodes('cfdi:Traslado')) {
+                            foreach($nodeTrasladados->searchNodes('cfdi:Traslado') as $nodeTraslado) {
+                                if (empty($impuestos['TotalImpuestosTrasladados'])) {
+                                    $totalTrasladados += $nodeTraslado['Importe'];
+                                }
+
+                                if (empty($impuestos['TotalTrasladosImpuestoIVA16']) && strpos($nodeTraslado['TasaOCuota'], '0.16') !== false) {
+                                    $IVA_Traslado_16 += $nodeTraslado['Importe'];
+                                }
                             }
                         }
                     }
                 }
 
-                
                 // Suma de impuestos retenidos
                 $nodeImpuestos = $concepto->searchNode('cfdi:Impuestos');
-                foreach ($nodeImpuestos as $nodeRetenidos) {
-                    if ($nodeRetenidos->searchNodes('cfdi:Retencion')) {
-                        foreach($nodeRetenidos->searchNodes('cfdi:Retencion') as $nodeRetenido) {
-                            if (empty($impuestos['TotalImpuestosRetenidos'])) {
-                                $totalRetenidos += $nodeRetenido['Importe'];
-                            }
+                if ($nodeImpuestos) {
+                    foreach ($nodeImpuestos as $nodeRetenidos) {
+                        if ($nodeRetenidos->searchNodes('cfdi:Retencion')) {
+                            foreach($nodeRetenidos->searchNodes('cfdi:Retencion') as $nodeRetenido) {
+                                if (empty($impuestos['TotalImpuestosRetenidos'])) {
+                                    $totalRetenidos += $nodeRetenido['Importe'];
+                                }
 
-                            if (empty($impuestos['TotalRetencionesISR']) && $nodeRetenido['Impuesto'] == '001') {
-                                $ISR_Retenido += $nodeRetenido['Importe'];
-                            }
+                                if (empty($impuestos['TotalRetencionesISR']) && $nodeRetenido['Impuesto'] == '001') {
+                                    $ISR_Retenido += $nodeRetenido['Importe'];
+                                }
 
-                            if (empty($impuestos['TotalRetencionesIVA']) && $nodeRetenido['Impuesto'] == '002') {
-                                $IVA_Retenido += $nodeRetenido['Importe'];
-                            }
+                                if (empty($impuestos['TotalRetencionesIVA']) && $nodeRetenido['Impuesto'] == '002') {
+                                    $IVA_Retenido += $nodeRetenido['Importe'];
+                                }
 
-                            if (empty($impuestos['TotalRetencionesIEPS']) && $nodeRetenido['Impuesto'] == '003') {
-                                $IEPS_Retenido += $nodeRetenido['Importe'];
+                                if (empty($impuestos['TotalRetencionesIEPS']) && $nodeRetenido['Impuesto'] == '003') {
+                                    $IEPS_Retenido += $nodeRetenido['Importe'];
+                                }
                             }
                         }
                     }
