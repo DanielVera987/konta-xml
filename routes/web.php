@@ -22,7 +22,7 @@ Route::get('/', function () {
 Route::get('/download', function() {
     $path = storage_path().'/'.'app/cfdis.xlsx';
     if (file_exists($path)) {
-        \File::deleteDirectory($path));
+        \File::deleteDirectory($path);
 
         return response()->download($path);
     } else {
