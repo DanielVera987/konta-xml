@@ -17,9 +17,12 @@ class CreateXmlToExcel extends CreateRecord
 
     protected function getCreateAnotherFormAction(): Action
     {
-        return Action::make('Descargar excel')
-            ->url(route('download'))
-            ->color('success');
+        $path = storage_path().'/'.'app/cfdis.xlsx';
+        if (file_exists($path)) {
+            return Action::make('Descargar excel')
+                ->url(route('download'))
+                ->color('success');
+        }
     }
 
     protected function getRedirectUrl(): string
@@ -29,15 +32,19 @@ class CreateXmlToExcel extends CreateRecord
 
     protected function handleRecordCreation(array $data): Model
     {
-        $this->downloadExcel($data);
+        $this->ExportExcel($data);
 
         $record = static::getModel()::create();
 
         return $record;
     }
 
-    public function downloadExcel(array $data)
+    public function ExportExcel(array $data)
     {
+        $path = storage_path().'/'.'app/cfdis.xlsx';
+        if (file_exists($path)) {
+            \File::delete($path);
+        }
         if (!empty($data['attachments'])) {
             $cfdis = collect();
 

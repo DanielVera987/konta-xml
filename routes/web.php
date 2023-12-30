@@ -22,10 +22,7 @@ Route::get('/', function () {
 Route::get('/download', function() {
     $path = storage_path().'/'.'app/cfdis.xlsx';
     if (file_exists($path)) {
-        $tmpFiles = Storage::files('livewire-tmp');
-        foreach($tmpFiles as $tmpFile) {
-            Storage::delete($tmpFile);
-        }
+        \File::deleteDirectory($path));
 
         return response()->download($path);
     } else {
