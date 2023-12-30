@@ -23,6 +23,8 @@ class CreateXmlToExcel extends CreateRecord
                 ->url(route('download'))
                 ->color('success');
         }
+
+        return null;
     }
 
     protected function getRedirectUrl(): string
