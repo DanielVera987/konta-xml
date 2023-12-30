@@ -24,7 +24,10 @@ class CreateXmlToExcel extends CreateRecord
                 ->color('success');
         }
 
-        return Action::make(null);
+        return Action::make('Descargar excel')
+                ->url(route('download'))
+                ->color('success')
+                ->disabled();
     }
 
     protected function getRedirectUrl(): string
