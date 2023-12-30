@@ -24,7 +24,7 @@ class CreateXmlToExcel extends CreateRecord
                 ->color('success');
         }
 
-        return null;
+        return Action::make(null);
     }
 
     protected function getRedirectUrl(): string
