@@ -18,6 +18,10 @@ class XmlToExcelResource extends Resource
 {
     protected static ?string $model = XmlToExcel::class;
 
+    protected static ?string $modelLabel = 'Generar Excel';
+
+    protected static ?string $navigationLabel = 'Generar Excel';
+
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form

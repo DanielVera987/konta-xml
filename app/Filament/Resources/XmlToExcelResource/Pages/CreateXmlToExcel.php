@@ -18,17 +18,16 @@ class CreateXmlToExcel extends CreateRecord
 
     protected function getCreateAnotherFormAction(): Action
     {
-        $path = storage_path().'/'.'app/cfdis.xlsx';
-        if (file_exists($path)) {
-            return Action::make('Descargar excel')
+        $file = storage_path() . '/app/cfdis.xlsx';
+        if (file_exists($file)) {
+            return Action::make(__('Descargar excel'))
                 ->url(route('download'))
                 ->color('success');
         }
 
-        return Action::make('Descargar excel')
-                ->url(route('download'))
-                ->color('success')
-                ->disabled();
+        return Action::make(__('Descargar excel'))
+            ->url(route('download'))
+            ->hidden();
     }
 
     protected function getRedirectUrl(): string
@@ -38,16 +37,16 @@ class CreateXmlToExcel extends CreateRecord
 
     protected function handleRecordCreation(array $data): Model
     {
-        $this->ExportExcel($data);
+        $this->exportExcel($data);
 
         $record = static::getModel()::create();
 
         return $record;
     }
 
-    public function ExportExcel(array $data)
+    public function exportExcel(array $data)
     {
-        $path = storage_path().'/'.'app/cfdis.xlsx';
+        $path = storage_path() . '/app/cfdis.xlsx';
 
         if (file_exists($path)) {
             File::delete($path);
@@ -65,5 +64,10 @@ class CreateXmlToExcel extends CreateRecord
 
             Excel::store($export, 'cfdis.xlsx');
         }
+    }
+
+    protected function getCancelFormAction(): Action
+    {
+        return Action::make('cancel')->hidden();
     }
 }

@@ -21,8 +21,8 @@ Route::get('/', function () {
 });
 
 Route::get('/download', function() {
-    $path = storage_path().'/'.'app/cfdis.xlsx';
-    $dir = storage_path() . '/' . 'app/livewire-tmp';
+    $path = storage_path() . '/app/cfdis.xlsx';
+    $dir = storage_path() . '/app/livewire-tmp';
 
     if (file_exists($path)) {
         File::deleteDirectory($dir);

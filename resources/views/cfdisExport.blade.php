@@ -58,11 +58,11 @@
                         if ($nodeTrasladados->searchNodes('cfdi:Traslado')) {
                             foreach($nodeTrasladados->searchNodes('cfdi:Traslado') as $nodeTraslado) {
                                 if (empty($impuestos['TotalImpuestosTrasladados'])) {
-                                    $totalTrasladados += $nodeTraslado['Importe'];
+                                    $totalTrasladados += (float)$nodeTraslado['Importe'];
                                 }
 
                                 if (empty($impuestos['TotalTrasladosImpuestoIVA16']) && strpos($nodeTraslado['TasaOCuota'], '0.16') !== false) {
-                                    $IVA_Traslado_16 += $nodeTraslado['Importe'];
+                                    $IVA_Traslado_16 += (float)$nodeTraslado['Importe'];
                                 }
                             }
                         }
@@ -76,19 +76,19 @@
                         if ($nodeRetenidos->searchNodes('cfdi:Retencion')) {
                             foreach($nodeRetenidos->searchNodes('cfdi:Retencion') as $nodeRetenido) {
                                 if (empty($impuestos['TotalImpuestosRetenidos'])) {
-                                    $totalRetenidos += $nodeRetenido['Importe'];
+                                    $totalRetenidos += (float)$nodeRetenido['Importe'];
                                 }
 
                                 if (empty($impuestos['TotalRetencionesISR']) && $nodeRetenido['Impuesto'] == '001') {
-                                    $ISR_Retenido += $nodeRetenido['Importe'];
+                                    $ISR_Retenido += (float)$nodeRetenido['Importe'];
                                 }
 
                                 if (empty($impuestos['TotalRetencionesIVA']) && $nodeRetenido['Impuesto'] == '002') {
-                                    $IVA_Retenido += $nodeRetenido['Importe'];
+                                    $IVA_Retenido += (float)$nodeRetenido['Importe'];
                                 }
 
                                 if (empty($impuestos['TotalRetencionesIEPS']) && $nodeRetenido['Impuesto'] == '003') {
-                                    $IEPS_Retenido += $nodeRetenido['Importe'];
+                                    $IEPS_Retenido += (float)$nodeRetenido['Importe'];
                                 }
                             }
                         }
