@@ -3,6 +3,8 @@
 namespace App\Filament\Resources\XmlToExcelResource\Pages;
 
 use Filament\Actions;
+use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Support\Str;
 use App\Exports\CfdisExport;
 use Filament\Actions\Action;
 use Illuminate\Support\Facades\File;
@@ -69,5 +71,14 @@ class CreateXmlToExcel extends CreateRecord
     protected function getCancelFormAction(): Action
     {
         return Action::make('cancel')->hidden();
+    }
+
+    public function getTitle(): string | Htmlable
+    {
+        if (filled(static::$title)) {
+            return static::$title;
+        }
+
+        return Str::headline(static::getResource()::getModelLabel());
     }
 }
